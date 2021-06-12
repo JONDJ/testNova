@@ -64,3 +64,6 @@ jobs:
     needs: laravel
     # master.
     if: github.ref == 'refs/heads/master'
+    steps:
+    - name: Build
+      run: vendor/bin/phpunit
