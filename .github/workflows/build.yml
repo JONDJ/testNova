@@ -1,4 +1,4 @@
-name: API
+name: DevOps
 on: [push, pull_request]
 jobs:
   laravel:
@@ -13,8 +13,8 @@ jobs:
           MYSQL_USER: 'root'
           MYSQL_PASSWORD: ''
         ports:
-          - 3306/tcp
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=10
     strategy:
       fail-fast: false
       matrix:
@@ -58,3 +58,9 @@ jobs:
         run: vendor/bin/phpunit
         env:
           DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+# CD
+  deploy:
+    runs-on: ubuntu-latest
+    needs: laravel
+    # master.
+    if: github.ref == 'refs/heads/master'
