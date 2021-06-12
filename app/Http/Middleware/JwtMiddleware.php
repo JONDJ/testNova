@@ -20,7 +20,11 @@ class JwtMiddleware extends BaseMiddleware
     public function handle($request, Closure $next)
     {
         try {
-            $user = JWTAuth::parseToken()->authenticate();
+            $value = $request->header('X-Parse-REST-API-Key');
+            if($value==env('API_KEY'))
+                $user = JWTAuth::parseToken()->authenticate();
+            else
+                return response()->json(['status' => 'ApiKey is Invalid']);
         } catch (Exception $e) {
             if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
                 return response()->json(['status' => 'Token is Invalid']);
